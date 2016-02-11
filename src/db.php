@@ -15,11 +15,8 @@ class DB_CONNECT {
 		include __DIR__ . '/conf.php';
 	
 		$this->db = new mysqli($DB_SERVER, $DB_USER, $DB_PASSWORD, $DB_DATABASE);
-	
 		if ($this->db->connect_error)
-		{
 			die("Connection failed: " . $this->db->connect_error);
-		}
  
 		return $this->db;
 	}
@@ -29,17 +26,22 @@ class DB_CONNECT {
 			$this->db->close();	
 	}
 	
+	public function countEvents() {
+		$sql = "SELECT COUNT(*) as amount FROM event";
+		if (!$result = $this->db->query($sql))
+			die("Error description: " . $this->db->error);
+
+		return $result->fetch_assoc();
+	}
+	
 	public function fetchAll($table) {
 		$sql = "SELECT * FROM `$table`";
 		if (!$result = $this->db->query($sql))
-		{
 			die("Error description: " . $this->db->error);
-		}
 		$arr = array();
 		while ($row = $result->fetch_assoc())
-		{
 			$arr[] = $row;	
-		}
+		
 		return $arr;
 	}
 
@@ -49,14 +51,11 @@ class DB_CONNECT {
 			GROUP BY sig_priority
 			ORDER BY sig_priority";
 		if (!$result = $this->db->query($sql))
-		{
 			die("Error description: " . $this->db->error);
-		}
 		$arr = array();
 		while ($row = $result->fetch_assoc())
-		{
 			$arr[] = $row;	
-		}
+		
 		return $arr;
 	}
 
@@ -69,14 +68,11 @@ class DB_CONNECT {
 			LIMIT $limit
 			OFFSET $offset";
 		if (!$result = $this->db->query($sql))
-		{
 			die("Error description: " . $this->db->error);
-		}
 		$arr = array();
 		while ($row = $result->fetch_assoc())
-		{
 			$arr[] = $row;	
-		}
+		
 		return $arr;
 	}
 
@@ -88,14 +84,11 @@ class DB_CONNECT {
 			LIMIT 5
 		";
 		if (!$result = $this->db->query($sql))
-		{
 			die("Error description: " . $this->db->error);
-		}
 		$arr = array();
 		while ($row = $result->fetch_assoc())
-		{
 			$arr[] = $row;	
-		}
+		
 		return $arr;
 	}
 
@@ -108,14 +101,11 @@ class DB_CONNECT {
 			LIMIT 5
 		";
 		if (!$result = $this->db->query($sql))
-		{
 			die("Error description: " . $this->db->error);
-		}
 		$arr = array();
 		while ($row = $result->fetch_assoc())
-		{
 			$arr[] = $row;	
-		}
+		
 		return $arr;
 	}
 
@@ -130,14 +120,11 @@ class DB_CONNECT {
 			LIMIT 5
 		";
 		if (!$result = $this->db->query($sql))
-		{
 			die("Error description: " . $this->db->error);
-		}
 		$arr = array();
 		while ($row = $result->fetch_assoc())
-		{
 			$arr[] = $row;	
-		}
+		
 		return $arr;
 	}
 }

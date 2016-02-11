@@ -4,12 +4,18 @@
 
 .event {
 	border-top: 1px solid #666;
+	width: 100%;
 }
 
 .eventAttr {
 	display: inline-block;
 	margin-right: -1px; 
 	padding: 7px;
+}
+
+.eventHeader {
+	font-weight: bold;
+
 }
 
 #eventPrio, #eventPrio1, #eventPrio2, #eventPrio3 {
@@ -48,4 +54,24 @@
 
 #eventTime {
 	width: 150px;
+}
+
+#paging {
+	width: 100%;
+}
+
+#prev {
+	margin: 10px;
+	padding: 5px;
+	border-radius: 5px;
+	float: left;
+	background-color: lightblue;
+}
+
+#next {
+	margin: 10px;
+	padding: 5px;
+	border-radius: 5px;
+	float: right;
+	background-color: lightblue;
 }

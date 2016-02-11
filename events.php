@@ -26,7 +26,8 @@ foreach($events as $event) {
 	</div>";
 }
 $html .= "</section>";
-$html .= paging($offset);
+$totalEvents = $db->countEvents();
+$html .= paging($offset, $totalEvents['amount']);
 
 echo $html;
 include 'src/footer.php';

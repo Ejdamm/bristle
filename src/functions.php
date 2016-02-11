@@ -1,9 +1,12 @@
 <?php
-function paging($offset, $limit = 10) {
+function paging($offset, $totalEvents, $limit = 10) {
 	$html = "";
 	$next = $offset + $limit;
-	$previous = $offset - $limit;
-	$html .= "<a href='?offset=$next'>Next</a>";
+	$prev = $offset - $limit;
+	if ($prev >= 0)
+		$html .= "<div id='paging'><a href='?offset=$prev' id='prev'>Previous</a>";
+	if ($next <= $totalEvents)
+		$html .= "<a href='?offset=$next' id='next'>Next</a></div>";
 	return $html;
 }
 
