@@ -45,9 +45,9 @@ class DB_CONNECT {
 
 	public function countSeverities() {
 		$sql = "SELECT COUNT(*) as count, sig_priority FROM event 
-		INNER JOIN signature on event.signature = signature.sig_id
-		GROUP BY sig_priority
-		ORDER BY sig_priority";
+			INNER JOIN signature on event.signature = signature.sig_id
+			GROUP BY sig_priority
+			ORDER BY sig_priority";
 		if (!$result = $this->db->query($sql))
 		{
 			die("Error description: " . $this->db->error);
@@ -61,13 +61,71 @@ class DB_CONNECT {
 	}
 
 	public function getEvents() {
-		//sig_name, timestamp, sig_priority
 		$sql = "SELECT sig_name, timestamp, sig_priority, inet_ntoa(ip_src) as ip_src, inet_ntoa(ip_dst) as ip_dst
-		FROM event 
-		INNER JOIN signature on event.signature = signature.sig_id
-		INNER JOIN iphdr on event.sid = iphdr.sid AND event.cid = iphdr.cid
-		ORDER BY timestamp DESC
-		LIMIT 20";
+			FROM event 
+			INNER JOIN signature on event.signature = signature.sig_id
+			INNER JOIN iphdr on event.sid = iphdr.sid AND event.cid = iphdr.cid
+			ORDER BY timestamp DESC
+			LIMIT 20";
+		if (!$result = $this->db->query($sql))
+		{
+			die("Error description: " . $this->db->error);
+		}
+		$arr = array();
+		while ($row = $result->fetch_assoc())
+		{
+			$arr[] = $row;	
+		}
+		return $arr;
+	}
+
+	public function getLastEvents() {
+		$sql = "SELECT sig_name, MAX(timestamp) AS timestamp FROM event 
+			INNER JOIN signature on event.signature = signature.sig_id
+			GROUP BY sig_name
+			ORDER BY timestamp DESC
+			LIMIT 5
+		";
+		if (!$result = $this->db->query($sql))
+		{
+			die("Error description: " . $this->db->error);
+		}
+		$arr = array();
+		while ($row = $result->fetch_assoc())
+		{
+			$arr[] = $row;	
+		}
+		return $arr;
+	}
+
+	public function getCommonEvents() {
+		$sql = "SELECT sig_name, COUNT(sig_name) AS amount FROM event 
+			INNER JOIN signature on event.signature = signature.sig_id
+			GROUP BY sig_name
+			ORDER BY amount DESC
+			LIMIT 5
+		";
+		if (!$result = $this->db->query($sql))
+		{
+			die("Error description: " . $this->db->error);
+		}
+		$arr = array();
+		while ($row = $result->fetch_assoc())
+		{
+			$arr[] = $row;	
+		}
+		return $arr;
+	}
+
+	public function getFrequentIP() {
+		$sql = "SELECT inet_ntoa(ip_src) as ip_src, COUNT(inet_ntoa(ip_src)) as amount
+			FROM event 
+			INNER JOIN signature on event.signature = signature.sig_id
+			INNER JOIN iphdr on event.sid = iphdr.sid AND event.cid = iphdr.cid
+			GROUP BY ip_src
+			ORDER BY amount DESC
+			LIMIT 5
+		";
 		if (!$result = $this->db->query($sql))
 		{
 			die("Error description: " . $this->db->error);

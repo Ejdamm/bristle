@@ -29,32 +29,40 @@ foreach ($severities as $severity) {
 }
 $html .= "</section>";
 
+//okejokej lite idéer: 5 mest vanliga klasser senaste 30 dagar, 5 mest vanliga IP-adresser source, 3 vanligaste protokoll
+
+$htmlLE = "";
+$lastEvents = $db->getLastEvents();
+foreach($lastEvents as $event) 
+    $htmlLE .= "<div class='comp_entry'>".$event['sig_name']."</div>";
+
+$htmlCE = "";
+$commonEvents = $db->getCommonEvents();
+foreach($commonEvents as $event) 
+    $htmlCE .= "<div class='comp_entry'>".$event['sig_name']." (".$event['amount'].")"."</div>";
+
+$htmlFIP = "";
+$frequentIP = $db->getFrequentIP();
+foreach($frequentIP as $ip) 
+    $htmlFIP .= "<div class='comp_entry'>".$ip['ip_src']." (".$ip['amount'].")"."</div>";
+
 
 $html .= "
 <aside id='compilation'>
   <div>
-    <h4>Top 5 most common events</h3>
-    <div class='comp_entry'>1234</div>
-    <div class='comp_entry'>1234</div>
-    <div class='comp_entry'>1234</div>
-    <div class='comp_entry'>1234</div>
-    <div class='comp_entry'>1234</div>
-  </div>
-  <div>
-    <h4>Last 5 unique events</h3>
-    <div class='comp_entry'>1234</div>
-    <div class='comp_entry'>1234</div>
-    <div class='comp_entry'>1234</div>
-    <div class='comp_entry'>1234</div>
-    <div class='comp_entry'>1234</div>
-  </div>
-  <div>
-    <h4>Protocol distribution</h3>
-    <div class='comp_entry'>1234</div>
-    <div class='comp_entry'>1234</div>
-    <div class='comp_entry'>1234</div>
+    <h4>Last unique events</h3>
+    $htmlLE
   </div>
 
+  <div>
+    <h4>Most common events (last 30 days)</h3>
+    $htmlCE
+  </div>
+
+  <div>
+    <h4>Most frequent source IP (last 30 days)</h3>
+    $htmlFIP
+  </div>
 </aside>
 ";
 
