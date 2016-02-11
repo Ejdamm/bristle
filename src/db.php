@@ -60,13 +60,14 @@ class DB_CONNECT {
 		return $arr;
 	}
 
-	public function getEvents() {
+	public function getEvents($offset, $limit = 10) {
 		$sql = "SELECT sig_name, timestamp, sig_priority, inet_ntoa(ip_src) as ip_src, inet_ntoa(ip_dst) as ip_dst
 			FROM event 
 			INNER JOIN signature on event.signature = signature.sig_id
 			INNER JOIN iphdr on event.sid = iphdr.sid AND event.cid = iphdr.cid
 			ORDER BY timestamp DESC
-			LIMIT 20";
+			LIMIT $limit
+			OFFSET $offset";
 		if (!$result = $this->db->query($sql))
 		{
 			die("Error description: " . $this->db->error);
@@ -101,6 +102,7 @@ class DB_CONNECT {
 	public function getCommonEvents() {
 		$sql = "SELECT sig_name, COUNT(sig_name) AS amount FROM event 
 			INNER JOIN signature on event.signature = signature.sig_id
+			WHERE timestamp BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()
 			GROUP BY sig_name
 			ORDER BY amount DESC
 			LIMIT 5
@@ -122,6 +124,7 @@ class DB_CONNECT {
 			FROM event 
 			INNER JOIN signature on event.signature = signature.sig_id
 			INNER JOIN iphdr on event.sid = iphdr.sid AND event.cid = iphdr.cid
+			WHERE timestamp BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()
 			GROUP BY ip_src
 			ORDER BY amount DESC
 			LIMIT 5

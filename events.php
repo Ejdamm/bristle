@@ -1,6 +1,6 @@
 <?php 
 include 'src/header.php';
-
+$offset = isset($_GET['offset']) ? $_GET['offset'] : 0;
 $html = "";
 $db = new DB_connect;
 $db->connect();	
@@ -15,7 +15,7 @@ $html .= "<div class='eventHeader'>
 	</div>";
 
 
-$events = $db->getEvents();
+$events = $db->getEvents($offset);
 foreach($events as $event) {
 	$html .= "<div class='event'>
 	<span class='eventAttr' id='eventPrio".$event['sig_priority']."'>".$event['sig_priority']."
@@ -26,8 +26,7 @@ foreach($events as $event) {
 	</div>";
 }
 $html .= "</section>";
-
-
+$html .= paging($offset);
 
 echo $html;
 include 'src/footer.php';
