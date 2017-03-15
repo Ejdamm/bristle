@@ -1,3 +1,10 @@
+<?php
+include 'src/conf.php';
+include 'src/db.php';
+include 'src/functions.php';
+include 'src/common.php';
+
+?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -7,7 +14,7 @@
   </head>
   <body>
     <header class="topheader">
-      <span class="logo">Bristle</span>
+      <span class="logo">BRISTLE</span>
 
       <nav class="navbar">
         <ul class="navbar-list">

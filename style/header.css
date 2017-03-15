@@ -1,7 +1,7 @@
 .topheader {
 	width: 100%;
 	border-bottom: solid 1px #E9EAEA;
-	padding: 10px;
+	padding: 10px 0px 10px 0px;
 }
 
 .navbar {
@@ -25,10 +25,7 @@
 }
 
 .logo {
-	padding: 10px 100px 10px 0px;
+	padding: 10px;
+	margin-right: 100px;
 	font-size: 1.2em;
-	text-decoration: underline;
 }
-
-
-

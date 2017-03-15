@@ -1,0 +1,31 @@
+.severity_box {
+	display: inline-block;
+	border-width: 1px;
+	border-style: solid;
+	border-radius: 5%;
+	box-shadow: 0px 5px 5px #888888;
+	margin: 20px;
+	padding: 10px;
+	width: 150px;
+	text-align: center;
+}
+
+.severity_number {
+	font-size: 3em;
+}
+
+#high {
+	border-color: #FC4B4B;
+	background: rgba(252, 75, 75, 0.05);
+
+}
+
+#medium {
+	border-color: #FFAB2E;
+	background: rgba(255, 171, 46, 0.05);
+}
+
+#low {
+	border-color: #97FF30;
+	background: rgba(151, 255, 48, 0.05);
+}
