@@ -33,5 +33,36 @@ $html = "
   </span>
 </section>";
 
+$html .= "
+<aside id='compilation'>
+  <div>
+    <h4>Top 5 most common events</h3>
+    <div class='comp_entry'>1234</div>
+    <div class='comp_entry'>1234</div>
+    <div class='comp_entry'>1234</div>
+    <div class='comp_entry'>1234</div>
+    <div class='comp_entry'>1234</div>
+  </div>
+  <div>
+    <h4>Last 5 unique events</h3>
+    <div class='comp_entry'>1234</div>
+    <div class='comp_entry'>1234</div>
+    <div class='comp_entry'>1234</div>
+    <div class='comp_entry'>1234</div>
+    <div class='comp_entry'>1234</div>
+  </div>
+  <div>
+    <h4>Protocol distribution</h3>
+    <div class='comp_entry'>1234</div>
+    <div class='comp_entry'>1234</div>
+    <div class='comp_entry'>1234</div>
+  </div>
+
+</aside>
+";
+
+
+
+
 echo $html;
 include 'src/footer.php';
