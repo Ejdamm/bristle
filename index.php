@@ -1,37 +1,34 @@
 <?php 
 include 'src/header.php';
 
+$html = "";
 $db = new DB_connect;
 $db->connect();	
-$events = $db->fetchAll("event");
-$signatures = $db->fetchAll("signature");
+$severityCount = $db->countSeverities();
+
+//prepare the severites
 $severities = array(
-	1 => 0,
-	2 => 0,
-	3 => 0
+	1 => array('count' => 0, 'id' => "high", 'description' => "High severity"),
+	2 => array('count' => 0, 'id' => "medium", 'description' => "Medium severity"),
+	3 => array('count' => 0, 'id' => "low", 'description' => "Low severity")
 );
 
-foreach ($events as $event) {
-	$sig_id = $event['signature'] - 1;
-	$sig_priority = $signatures[$sig_id]['sig_priority'];
-	$severities[$sig_priority]++;
+//update the count from the database result
+foreach ($severityCount as $sCount) {
+	$severities[$sCount['sig_priority']]['count'] = $sCount['count'];
 }
 
-$html = "
-<section id='severities'>
-  <span class='severity_box' id='high'>
-    <div class='severity_number red'>$severities[1]</div>
-    <div class='severity_caption'>High severity</div>
-  </span>
-  <span class='severity_box' id='medium'>
-    <div class='severity_number yellow'>$severities[2]</div>
-    <div class='severity_caption'>Medium severity</div>
-  </span>
-  <span class='severity_box' id='low'>
-    <div class='severity_number green'>$severities[3]</div>
-    <div class='severity_caption'>Low severity</div>
-  </span>
-</section>";
+//create the html for severity boxes
+$html .= "<section id='severities'>";
+foreach ($severities as $severity) {
+	$html .= " 
+  <span class='severity_box' id='".$severity['id']."'>
+    <div class='severity_number red'>".$severity['count']."</div>
+    <div class='severity_caption'>".$severity['description']."</div>
+  </span>";
+}
+$html .= "</section>";
+
 
 $html .= "
 <aside id='compilation'>
