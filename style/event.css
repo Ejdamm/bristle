@@ -1,0 +1,51 @@
+#events {
+	width: 100%;
+}
+
+.event {
+	border-top: 1px solid #666;
+}
+
+.eventAttr {
+	display: inline-block;
+	margin-right: -1px; 
+	padding: 7px;
+}
+
+#eventPrio, #eventPrio1, #eventPrio2, #eventPrio3 {
+	width: 20px;
+	padding: 7px 10px;
+	text-align: center;
+}
+
+#eventPrio {
+	padding: 7px 20px 7px 0px;
+}
+
+#eventPrio1 {
+	background-color: #FC4B4B;
+}
+
+#eventPrio2 {
+	background-color: #FFAB2E;
+}
+
+#eventPrio3 {
+	background-color: #97FF30;
+}
+
+#eventSrc {
+	width: 110px;
+}
+
+#eventDest {
+	width: 110px;
+}
+
+#eventName {
+	width: 480px;
+}
+
+#eventTime {
+	width: 150px;
+}

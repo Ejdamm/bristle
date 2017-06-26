@@ -59,4 +59,24 @@ class DB_CONNECT {
 		}
 		return $arr;
 	}
+
+	public function getEvents() {
+		//sig_name, timestamp, sig_priority
+		$sql = "SELECT sig_name, timestamp, sig_priority, inet_ntoa(ip_src) as ip_src, inet_ntoa(ip_dst) as ip_dst
+		FROM event 
+		INNER JOIN signature on event.signature = signature.sig_id
+		INNER JOIN iphdr on event.sid = iphdr.sid AND event.cid = iphdr.cid
+		ORDER BY timestamp DESC
+		LIMIT 20";
+		if (!$result = $this->db->query($sql))
+		{
+			die("Error description: " . $this->db->error);
+		}
+		$arr = array();
+		while ($row = $result->fetch_assoc())
+		{
+			$arr[] = $row;	
+		}
+		return $arr;
+	}
 }
