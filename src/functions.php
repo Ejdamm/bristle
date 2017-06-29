@@ -1,8 +1,10 @@
 <?php
-function paging($offset, $totalEvents, $limit = 10) {
+
+function paging($offset, $totalEvents) {
+	include 'src/conf.php';
 	$html = "";
-	$next = $offset + $limit;
-	$prev = $offset - $limit;
+	$next = $offset + $LIMIT;
+	$prev = $offset - $LIMIT;
 	if ($prev >= 0)
 		$html .= "<div id='paging'><a href='?offset=$prev' id='prev'>Previous</a>";
 	if ($next <= $totalEvents)

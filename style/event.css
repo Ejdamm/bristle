@@ -9,23 +9,26 @@
 
 .eventAttr {
 	display: inline-block;
-	margin-right: -1px; 
-	padding: 7px;
+	padding: 0.5%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: middle;
 }
 
 .eventHeader {
 	font-weight: bold;
-
 }
 
 #eventPrio, #eventPrio1, #eventPrio2, #eventPrio3 {
-	width: 20px;
-	padding: 7px 10px;
+	width: 3%;
 	text-align: center;
 }
 
 #eventPrio {
-	padding: 7px 20px 7px 0px;
+	text-overflow: clip;
+	padding-left: 0px;
+	padding-right: 0.5%;
 }
 
 #eventPrio1 {
@@ -41,19 +44,19 @@
 }
 
 #eventSrc {
-	width: 110px;
+	width: 12%;
 }
 
 #eventDest {
-	width: 110px;
+	width: 12%;
 }
 
 #eventName {
-	width: 480px;
+	width: 63%;
 }
 
 #eventTime {
-	width: 150px;
+	width: 5%;
 }
 
 #paging {

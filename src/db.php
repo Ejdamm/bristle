@@ -26,25 +26,6 @@ class DB_CONNECT {
 			$this->db->close();	
 	}
 	
-	public function countEvents() {
-		$sql = "SELECT COUNT(*) as amount FROM event";
-		if (!$result = $this->db->query($sql))
-			die("Error description: " . $this->db->error);
-
-		return $result->fetch_assoc();
-	}
-	
-	public function fetchAll($table) {
-		$sql = "SELECT * FROM `$table`";
-		if (!$result = $this->db->query($sql))
-			die("Error description: " . $this->db->error);
-		$arr = array();
-		while ($row = $result->fetch_assoc())
-			$arr[] = $row;	
-		
-		return $arr;
-	}
-
 	public function countSeverities() {
 		$sql = "SELECT COUNT(*) as count, sig_priority FROM event 
 			INNER JOIN signature on event.signature = signature.sig_id
@@ -59,12 +40,17 @@ class DB_CONNECT {
 		return $arr;
 	}
 
-	public function getEvents($offset, $limit = 10) {
-		$sql = "SELECT sig_name, timestamp, sig_priority, inet_ntoa(ip_src) as ip_src, inet_ntoa(ip_dst) as ip_dst
+	public function getEvents($offset, $limit) {
+		if(!is_numeric($offset))
+			return array();
+		$sql = "SELECT sig_name, DATE_FORMAT(timestamp, '%Y-%m-%d') AS date, DATE_FORMAT(timestamp, '%H:%i') AS time, 
+			sig_priority, inet_ntoa(ip_src) as ip_src, inet_ntoa(ip_dst) as ip_dst, 
+			COUNT(DATE_FORMAT(timestamp, '%H:%i')) AS sessions
 			FROM event 
 			INNER JOIN signature on event.signature = signature.sig_id
 			INNER JOIN iphdr on event.sid = iphdr.sid AND event.cid = iphdr.cid
-			ORDER BY timestamp DESC
+			GROUP BY sig_name, sig_priority, ip_src, ip_dst, date, time
+			ORDER BY date DESC, time DESC
 			LIMIT $limit
 			OFFSET $offset";
 		if (!$result = $this->db->query($sql))
@@ -74,6 +60,20 @@ class DB_CONNECT {
 			$arr[] = $row;	
 		
 		return $arr;
+	}
+
+	public function countEvents() {
+		$sql = "SELECT COUNT(*) AS amount FROM 
+				(SELECT sig_name, DATE_FORMAT(timestamp, '%Y-%m-%d') AS date, DATE_FORMAT(timestamp, '%H:%i') AS time, 
+				sig_priority, inet_ntoa(ip_src) as ip_src, inet_ntoa(ip_dst) as ip_dst 
+				FROM event 
+				INNER JOIN signature on event.signature = signature.sig_id
+				INNER JOIN iphdr on event.sid = iphdr.sid AND event.cid = iphdr.cid
+				GROUP BY sig_name, sig_priority, ip_src, ip_dst, date, time) AS total";
+		if (!$result = $this->db->query($sql))
+			die("Error description: " . $this->db->error);
+		$arr = array();
+		return $result->fetch_assoc();
 	}
 
 	public function getLastEvents() {
