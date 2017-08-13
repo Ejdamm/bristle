@@ -22,13 +22,13 @@ foreach($events as $event) {
 			</span><span class='eventAttr' id='eventTime'>Time</span>
 			</div>";
 	}
-	$html .= "<div class='event'>
+	$html .= "<a href='?".$_SERVER['QUERY_STRING']."&sid=".$event['sid']."&cid=".$event['cid']."'><div class='event'>
 	<span class='eventAttr' id='eventPrio".$event['sig_priority']."'>".$event['sig_priority']."
 	</span><span class='eventAttr' id='eventSrc'>".$event['ip_src']."
 	</span><span class='eventAttr' id='eventDest'>".$event['ip_dst']."
 	</span><span class='eventAttr' id='eventName'>".$event['sig_name']."
 	</span><span class='eventAttr' id='eventTime'>".$event['time']."</span>
-	</div>";
+	</div></a>";
 }
 $html .= "</section>";
 $totalEvents = $db->countEvents();

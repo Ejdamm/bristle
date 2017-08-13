@@ -43,13 +43,11 @@ class DB_CONNECT {
 	public function getEvents($offset, $limit) {
 		if(!is_numeric($offset))
 			return array();
-		$sql = "SELECT sig_name, DATE_FORMAT(timestamp, '%Y-%m-%d') AS date, DATE_FORMAT(timestamp, '%H:%i') AS time, 
-			sig_priority, inet_ntoa(ip_src) as ip_src, inet_ntoa(ip_dst) as ip_dst, 
-			COUNT(DATE_FORMAT(timestamp, '%H:%i')) AS sessions
+		$sql = "SELECT event.sid, event.cid, sig_name, DATE_FORMAT(timestamp, '%Y-%m-%d') AS date, DATE_FORMAT(timestamp, '%H:%i') AS time, 
+			sig_priority, inet_ntoa(ip_src) as ip_src, inet_ntoa(ip_dst) as ip_dst 
 			FROM event 
 			INNER JOIN signature on event.signature = signature.sig_id
 			INNER JOIN iphdr on event.sid = iphdr.sid AND event.cid = iphdr.cid
-			GROUP BY sig_name, sig_priority, ip_src, ip_dst, date, time
 			ORDER BY date DESC, time DESC
 			LIMIT $limit
 			OFFSET $offset";
