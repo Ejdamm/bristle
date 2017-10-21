@@ -7,6 +7,28 @@
 	width: 100%;
 }
 
+#eventInfo {
+	border-top: 1px solid #ddd;
+	padding: 2% 5% 2% 5%;
+}
+
+#payload {
+}
+
+#payloadLabel {
+	font-weight: bold;
+}
+
+.payloadTable {
+	display: inline;
+	padding-right: 5%;
+}
+
+.payloadTable td {
+	text-align: center;
+	padding: 2px;
+}
+
 .eventAttr {
 	display: inline-block;
 	padding: 0.5%;
@@ -20,42 +42,42 @@
 	font-weight: bold;
 }
 
-#eventPrio, #eventPrio1, #eventPrio2, #eventPrio3 {
+.eventPrio, .eventPrio1, .eventPrio2, .eventPrio3 {
 	width: 3%;
 	text-align: center;
 }
 
-#eventPrio {
+.eventPrio {
 	text-overflow: clip;
 	padding-left: 0px;
 	padding-right: 0.5%;
 }
 
-#eventPrio1 {
+.eventPrio1 {
 	background-color: #FC4B4B;
 }
 
-#eventPrio2 {
+.eventPrio2 {
 	background-color: #FFAB2E;
 }
 
-#eventPrio3 {
+.eventPrio3 {
 	background-color: #97FF30;
 }
 
-#eventSrc {
+.eventSrc {
 	width: 12%;
 }
 
-#eventDest {
+.eventDest {
 	width: 12%;
 }
 
-#eventName {
+.eventName {
 	width: 63%;
 }
 
-#eventTime {
+.eventTime {
 	width: 5%;
 }
 

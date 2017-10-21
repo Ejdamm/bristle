@@ -60,14 +60,18 @@ class DB_CONNECT {
 		return $arr;
 	}
 
+	public function getSingleEvent($sid, $cid) {
+		$sql = "SELECT data_payload
+			FROM data
+			WHERE sid = $sid AND cid = $cid"; 
+		if (!$result = $this->db->query($sql))
+			die("Error description: " . $this->db->error);
+		$arr = array();
+		return $result->fetch_assoc();
+	}
+
 	public function countEvents() {
-		$sql = "SELECT COUNT(*) AS amount FROM 
-				(SELECT sig_name, DATE_FORMAT(timestamp, '%Y-%m-%d') AS date, DATE_FORMAT(timestamp, '%H:%i') AS time, 
-				sig_priority, inet_ntoa(ip_src) as ip_src, inet_ntoa(ip_dst) as ip_dst 
-				FROM event 
-				INNER JOIN signature on event.signature = signature.sig_id
-				INNER JOIN iphdr on event.sid = iphdr.sid AND event.cid = iphdr.cid
-				GROUP BY sig_name, sig_priority, ip_src, ip_dst, date, time) AS total";
+		$sql = "SELECT COUNT(*) as amount FROM event"; 
 		if (!$result = $this->db->query($sql))
 			die("Error description: " . $this->db->error);
 		$arr = array();

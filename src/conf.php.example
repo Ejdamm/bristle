@@ -4,3 +4,4 @@ $DB_SERVER = "localhost";
 $DB_USER = "root";
 $DB_DATABASE = "snort";
 $DB_PASSWORD = "password";
+$LIMIT = 20;
