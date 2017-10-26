@@ -1,5 +1,5 @@
 <?php
-$PATH = "/bristle/";
+$PATH = "/var/www/html/bristle/";
 $DB_SERVER = "localhost";
 $DB_USER = "root";
 $DB_DATABASE = "snort";

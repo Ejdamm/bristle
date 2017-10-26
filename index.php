@@ -50,17 +50,17 @@ foreach($frequentIP as $ip)
 $html .= "
 <aside id='compilation'>
   <div>
-    <h4>Last unique events</h3>
+    <h4>Last unique events</h4>
     $htmlLE
   </div>
 
   <div>
-    <h4>Most common events (last 30 days)</h3>
+    <h4>Most common events (last 30 days)</h4>
     $htmlCE
   </div>
 
   <div>
-    <h4>Most frequent source IP (last 30 days)</h3>
+    <h4>Most frequent source IP (last 30 days)</h4>
     $htmlFIP
   </div>
 </aside>
