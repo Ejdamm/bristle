@@ -1,20 +1,34 @@
-/* Severity Section  */
-#severities {
-  width: 75%;
+/* Container for chart and severities */
+#container {
   display: inline-block;
-  position: relative;
-  vertical-align: top;
+  width: 75%;
+
 }
 
-.severity_box {
+/* Chart */
+#chart {
+}
+
+/* Severitie */
+#severities {
+  margin-top: 5%;
+}
+
+.outer_severity_box {
+  display: inline-block;
+  width: 33.33%;
+  text-align: center;
+}
+
+.inner_severity_box {
   display: inline-block;
   border-width: 1px;
   border-style: solid;
   border-radius: 5%;
   box-shadow: 0px 5px 5px #888888;
-  width: 27%;
+  position: relative;
+  width: 85%;
   min-width: 130px;
-  margin: 2%;
   padding: 2% 0;
   text-align: center;
 }
@@ -24,17 +38,17 @@
 }
 
 #high {
-  border-color: #FC4B4B;
+  border-color: #fc4b4b;
   background: rgba(252, 75, 75, 0.05);
 }
 
 #medium {
-  border-color: #FFAB2E;
+  border-color: #ffab2e;
   background: rgba(255, 171, 46, 0.05);
 }
 
 #low {
-  border-color: #97FF30;
+  border-color: #97ff30;
   background: rgba(151, 255, 48, 0.05);
 }
 
@@ -47,8 +61,8 @@
 }
 
 .comp_entry {
-  border-top: 1px solid #E9EAEA;
-  border-bottom: 1px solid #E9EAEA;
+  border-top: 1px solid #e9eaea;
+  border-bottom: 1px solid #e9eaea;
   border-collapse: collapse;
   margin:-1px 0px 0px -1px;
   padding: 3px 10px;

@@ -1,49 +1,59 @@
-<?php 
+<?php
 include 'src/header.php';
 
 $html = "";
 $db = new DB_connect;
-$db->connect();	
+$db->connect();
 $severityCount = $db->countSeverities();
 
-//prepare the severites
+//Create chart
+require 'lib/ChartJS.php';
+
+$labels = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday');
+$options = array();
+$attributes = array('id' => 'chart');
+$chart = new ChartJS('line', $labels, $options, $attributes);
+$chart->addDataset(array());
+$html .= "<section id='container'>" . $chart;
+
+//Prepare the severity boxes
 $severities = array(
-	1 => array('count' => 0, 'id' => "high", 'description' => "High severity"),
-	2 => array('count' => 0, 'id' => "medium", 'description' => "Medium severity"),
-	3 => array('count' => 0, 'id' => "low", 'description' => "Low severity")
+    1 => array('count' => 0, 'id' => "high", 'description' => "High severity"),
+    2 => array('count' => 0, 'id' => "medium", 'description' => "Medium severity"),
+    3 => array('count' => 0, 'id' => "low", 'description' => "Low severity")
 );
 
-//update the count from the database result
+//Update the count from the database result
 foreach ($severityCount as $sCount) {
-	$severities[$sCount['sig_priority']]['count'] = $sCount['count'];
+    $severities[$sCount['sig_priority']]['count'] = $sCount['count'];
 }
 
-//create the html for severity boxes
-$html .= "<section id='severities'>";
+//Create the html for severity boxes
+$html .= "<div id='severities'>";
 foreach ($severities as $severity) {
-	$html .= " 
-  <span class='severity_box' id='".$severity['id']."'>
-    <div class='severity_number red'>".$severity['count']."</div>
-    <div class='severity_caption'>".$severity['description']."</div>
-  </span>";
+    $html .= "<span class='outer_severity_box'>
+                <span class='inner_severity_box' id='".$severity['id']."'>
+                  <div class='severity_number red'>".$severity['count']."</div>
+                  <div class='severity_caption'>".$severity['description']."</div>
+                </span>
+              </span>";
 }
-$html .= "</section>";
+$html .= "</div></section>";
 
-//okejokej lite idéer: 5 mest vanliga klasser senaste 30 dagar, 5 mest vanliga IP-adresser source, 3 vanligaste protokoll
-
+//Get statistics
 $htmlLE = "";
 $lastEvents = $db->getLastEvents();
-foreach($lastEvents as $event) 
+foreach($lastEvents as $event)
     $htmlLE .= "<div class='comp_entry'>".$event['sig_name']."</div>";
 
 $htmlCE = "";
 $commonEvents = $db->getCommonEvents();
-foreach($commonEvents as $event) 
+foreach($commonEvents as $event)
     $htmlCE .= "<div class='comp_entry'>".$event['sig_name']." (".$event['amount'].")"."</div>";
 
 $htmlFIP = "";
 $frequentIP = $db->getFrequentIP();
-foreach($frequentIP as $ip) 
+foreach($frequentIP as $ip)
     $htmlFIP .= "<div class='comp_entry'>".$ip['ip_src']." (".$ip['amount'].")"."</div>";
 
 
@@ -64,10 +74,11 @@ $html .= "
     $htmlFIP
   </div>
 </aside>
+
+<script src='lib/Chart.js'></script>
+<script src='lib/driver.js'></script>
+<script>(function() {loadChartJsPhp();})();</script>
 ";
-
-
-
 
 echo $html;
 include 'src/footer.php';
