@@ -6,14 +6,64 @@ $db = new DB_connect;
 $db->connect();
 $severityCount = $db->countSeverities();
 
+
 //Create chart
 require 'lib/ChartJS.php';
 
-$labels = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday');
+$days = isset($_GET['days']) ? $_GET['days'] : 365;
+$keys = array();
+
+switch ($days) {
+case 7:
+    for ($i = 6; $i >= 0; $i--) {
+        $labels[] = date("l", time() - $i * 24 * 3600);
+    }
+    break;
+case 30:
+    for ($i = 29; $i >= 0; $i--) {
+        $labels[] = date("d/m", time() - $i * 24 * 3600);
+    }
+    break;
+case 365:
+    $months = array('January', 'February', 'March',
+                    'April', 'May', 'June',
+                    'July', 'August', 'September',
+                    'October', 'November', 'December');
+    $m = date("m", time() - 364 * 24 * 3600) - 1;
+    for ($i = 0; $i < 12; $i++) {
+        $labels[] = $months[$m++];
+        $m %= 12;
+    }
+    break;
+case 1:
+default:
+    for ($i = 23; $i >= 0; $i--) {
+        $labels[] = date("l", time() - $i * 3600);
+    }
+    $days = 1;
+}
+
+
+$chartdata = $db->countEventsPerDay($days);
+dump($chartdata);
+
+$data = array();
+foreach ($labels as $label) {
+    if (!empty($chartdata[$label])) {
+        $data[] = $chartdata[$label];
+    } else {
+        $data[] = 0;
+    }
+}
+$dataset['data'] = $data;
+
+dump($dataset);
+
+
 $options = array();
 $attributes = array('id' => 'chart');
 $chart = new ChartJS('line', $labels, $options, $attributes);
-$chart->addDataset(array());
+$chart->addDataset($dataset);
 $html .= "<section id='container'>" . $chart;
 
 //Prepare the severity boxes

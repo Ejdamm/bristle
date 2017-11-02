@@ -26,8 +26,41 @@ class DB_CONNECT {
 			$this->db->close();	
 	}
 	
+	public function countEventsPerDay($days) {
+        $firstDayFormat = "Y-m-d 00:00:00"; 
+        switch ($days) {
+        case 7:
+            $format = "%W";
+            break;
+        case 30:
+            $format = "%d/%m";
+            break;
+        case 365:
+            $format = "%M";
+            break;
+        case 1:
+        default:
+            $format = "%h:00";
+            $days = 2;
+            $firstDayFormat = "Y-m-d H:i:s";
+        }
+        $firstDay = date($firstDayFormat, time() - ($days - 1) * 24 * 3600);
+        $sql = "SELECT DATE_FORMAT(timestamp, '$format') as date, COUNT(*) as nrOfEvents
+            FROM event
+            INNER JOIN signature ON event.signature = signature.sig_id
+			WHERE DATE_FORMAT(timestamp, '%Y-%m-%d %H:%i:%s') >= '$firstDay'
+			GROUP BY date";
+		if (!$result = $this->db->query($sql))
+			die("Error description: " . $this->db->error);
+		$arr = array();
+		while ($row = $result->fetch_assoc())
+			$arr[$row['date']] = $row['nrOfEvents'];
+
+		return $arr;
+	}
+
 	public function countSeverities() {
-		$sql = "SELECT COUNT(*) as count, sig_priority FROM event 
+		$sql = "SELECT COUNT(*) as count, sig_priority FROM event
 			INNER JOIN signature on event.signature = signature.sig_id
 			GROUP BY sig_priority
 			ORDER BY sig_priority";
@@ -35,7 +68,7 @@ class DB_CONNECT {
 			die("Error description: " . $this->db->error);
 		$arr = array();
 		while ($row = $result->fetch_assoc())
-			$arr[] = $row;	
+			$arr[] = $row;
 		
 		return $arr;
 	}
