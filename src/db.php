@@ -40,7 +40,6 @@ class DB_CONNECT {
             $format = "%M";
             $followingMonth = date("m", time() - 364 * 24 * 3600) % 12 + 1;
             $firstDayFormat = "Y-$followingMonth-01 00:00:00";
-            echo $firstDayFormat;
             break;
         case 1:
         default:
@@ -50,16 +49,17 @@ class DB_CONNECT {
             $firstDayFormat = "Y-m-d H:00:00";
         }
         $firstDay = date($firstDayFormat, time() - ($days - 1) * $hours);
-        $sql = "SELECT DATE_FORMAT(timestamp, '$format') as date, COUNT(*) as nrOfEvents
+        $sql = "SELECT DATE_FORMAT(timestamp, '$format') as date,
+            COUNT(*) as nrOfEvents, sig_priority as priority
             FROM event
             INNER JOIN signature ON event.signature = signature.sig_id
 			WHERE DATE_FORMAT(timestamp, '%Y-%m-%d %H:%i:%s') >= '$firstDay'
-			GROUP BY date";
+			GROUP BY date, priority";
 		if (!$result = $this->db->query($sql))
 			die("Error description: " . $this->db->error);
 		$arr = array();
 		while ($row = $result->fetch_assoc())
-			$arr[$row['date']] = $row['nrOfEvents'];
+			$arr[$row['date']][$row['priority']] = $row['nrOfEvents'];
 
 		return $arr;
 	}

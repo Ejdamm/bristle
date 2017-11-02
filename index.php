@@ -44,19 +44,36 @@ default:
 }
 
 $chartdata = $db->countEventsPerDay($days);
-$data = array();
 foreach ($labels as $label) {
-    if (!empty($chartdata[$label])) {
-        $data[] = $chartdata[$label];
-    } else {
-        $data[] = 0;
-    }
+    $data[1][] = !empty($chartdata[$label][1]) ? $chartdata[$label][1] : 0;
+    $data[2][] = !empty($chartdata[$label][2]) ? $chartdata[$label][2] : 0;
+    $data[3][] = !empty($chartdata[$label][3]) ? $chartdata[$label][3] : 0;
 }
-$dataset['data'] = $data;
-$options = array();
+
+$dataset[1]['data'] = $data[1];
+$dataset[1]['backgroundColor'] = 'rgba(252, 75, 75, 0.5)';
+$dataset[1]['borderColor'] = 'rgba(252, 75, 75, 0.5)';
+$dataset[1]['label'] = 'High severity';
+$dataset[2]['data'] = $data[2];
+$dataset[2]['backgroundColor'] = 'rgba(255, 171, 46, 0.5)';
+$dataset[2]['borderColor'] = 'rgba(255, 171, 46, 0.5)';
+$dataset[2]['label'] = 'Medium severity';
+$dataset[3]['data'] = $data[3];
+$dataset[3]['backgroundColor'] = 'rgba(151, 255, 48, 0.5)';
+$dataset[3]['borderColor'] = 'rgba(151, 255, 48, 0.5)';
+$dataset[3]['label'] = 'Low severity';
+$options = array(
+               'scales' => array(
+                   'yAxes' => array(
+                       array('stacked' => true, 'ticks' => array('min' => 0))
+                   )
+               )
+           );
 $attributes = array('id' => 'chart');
 $chart = new ChartJS('line', $labels, $options, $attributes);
-$chart->addDataset($dataset);
+$chart->addDataset($dataset[1]);
+$chart->addDataset($dataset[2]);
+$chart->addDataset($dataset[3]);
 $html .= "<section id='container'>" . $chart;
 
 //Prepare the severity boxes
