@@ -28,6 +28,7 @@ class DB_CONNECT {
 	
 	public function countEventsPerDay($days) {
         $firstDayFormat = "Y-m-d 00:00:00"; 
+        $hours = 24 * 3600;
         switch ($days) {
         case 7:
             $format = "%W";
@@ -37,14 +38,18 @@ class DB_CONNECT {
             break;
         case 365:
             $format = "%M";
+            $followingMonth = date("m", time() - 364 * 24 * 3600) % 12 + 1;
+            $firstDayFormat = "Y-$followingMonth-01 00:00:00";
+            echo $firstDayFormat;
             break;
         case 1:
         default:
-            $format = "%h:00";
+            $format = "%H:00";
             $days = 2;
-            $firstDayFormat = "Y-m-d H:i:s";
+            $hours = 23 * 3600;
+            $firstDayFormat = "Y-m-d H:00:00";
         }
-        $firstDay = date($firstDayFormat, time() - ($days - 1) * 24 * 3600);
+        $firstDay = date($firstDayFormat, time() - ($days - 1) * $hours);
         $sql = "SELECT DATE_FORMAT(timestamp, '$format') as date, COUNT(*) as nrOfEvents
             FROM event
             INNER JOIN signature ON event.signature = signature.sig_id

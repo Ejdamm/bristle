@@ -10,7 +10,7 @@ $severityCount = $db->countSeverities();
 //Create chart
 require 'lib/ChartJS.php';
 
-$days = isset($_GET['days']) ? $_GET['days'] : 365;
+$days = isset($_GET['days']) ? $_GET['days'] : 1;
 $keys = array();
 
 switch ($days) {
@@ -29,24 +29,21 @@ case 365:
                     'April', 'May', 'June',
                     'July', 'August', 'September',
                     'October', 'November', 'December');
-    $m = date("m", time() - 364 * 24 * 3600) - 1;
+    $m = date("m", time() - 364 * 24 * 3600);
     for ($i = 0; $i < 12; $i++) {
-        $labels[] = $months[$m++];
         $m %= 12;
+        $labels[] = $months[$m++];
     }
     break;
 case 1:
 default:
     for ($i = 23; $i >= 0; $i--) {
-        $labels[] = date("l", time() - $i * 3600);
+        $labels[] = date("H:00", time() - $i * 3600);
     }
     $days = 1;
 }
 
-
 $chartdata = $db->countEventsPerDay($days);
-dump($chartdata);
-
 $data = array();
 foreach ($labels as $label) {
     if (!empty($chartdata[$label])) {
@@ -56,10 +53,6 @@ foreach ($labels as $label) {
     }
 }
 $dataset['data'] = $data;
-
-dump($dataset);
-
-
 $options = array();
 $attributes = array('id' => 'chart');
 $chart = new ChartJS('line', $labels, $options, $attributes);
