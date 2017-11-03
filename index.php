@@ -12,7 +12,7 @@ $periods = array(
               1 => "href='?days=1'>24 hours</a></li>",
               7 => "href='?days=7'>7 days</a></li>",
               30 => "href='?days=30'>30 days</a></li>",
-              365 => "href='?days=366'>12 months</a></li>"
+              365 => "href='?days=365'>12 months</a></li>"
           );
 $lihtml = "";
 foreach ($periods as $key => $li) {
@@ -120,11 +120,6 @@ foreach ($severities as $severity) {
 $html .= "</div></section>";
 
 //Get statistics
-$htmlLE = "";
-$lastEvents = $db->getLastEvents();
-foreach($lastEvents as $event)
-    $htmlLE .= "<div class='comp_entry'>".$event['sig_name']."</div>";
-
 $htmlCE = "";
 $commonEvents = $db->getCommonEvents();
 foreach($commonEvents as $event)
@@ -139,15 +134,9 @@ foreach($frequentIP as $ip)
 $html .= "
 <aside id='compilation'>
   <div>
-    <h4>Last unique events</h4>
-    $htmlLE
-  </div>
-
-  <div>
     <h4>Most common events (last 30 days)</h4>
     $htmlCE
   </div>
-
   <div>
     <h4>Most frequent source IP (last 30 days)</h4>
     $htmlFIP
