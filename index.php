@@ -5,12 +5,31 @@ $html = "";
 $db = new DB_connect;
 $db->connect();
 $severityCount = $db->countSeverities();
+$days = isset($_GET['days']) ? $_GET['days'] : 1;
+
+//Create period navbar
+$periods = array(
+              1 => "href='?days=1'>24 hours</a></li>",
+              7 => "href='?days=7'>7 days</a></li>",
+              30 => "href='?days=30'>30 days</a></li>",
+              365 => "href='?days=366'>12 months</a></li>"
+          );
+$lihtml = "";
+foreach ($periods as $key => $li) {
+    $lihtml .= "<li><a ";
+    if ($days == $key)
+        $lihtml .= "id='active'";
+    $lihtml .= " $li";
+}
+$html .= "<nav id='period_navbar'>
+            <ul id='period_navbar-list'>
+              $lihtml
+            </ul>
+          </nav>";
 
 
 //Create chart
 require 'lib/ChartJS.php';
-
-$days = isset($_GET['days']) ? $_GET['days'] : 1;
 $keys = array();
 
 switch ($days) {

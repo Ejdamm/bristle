@@ -5,11 +5,39 @@
 
 }
 
-/* Chart */
-#chart {
+/* Period navbar */
+#period_navbar {
+  border-bottom: 1px solid #aaa;
+  padding-bottom: 8px;
 }
 
-/* Severitie */
+#period_navbar-list {
+  font-size: 1.1em;
+  display: inline;
+  padding: 0;
+  margin: 0;
+}
+
+#period_navbar-list a {
+  padding: 8px 14px;
+}
+
+#period_navbar-list li {
+  display: inline;
+}
+
+#active {
+  border: 1px solid #aaa;
+  border-radius: 5px 5px 0px 0px;
+  border-bottom-color: white;
+}
+
+/* Chart */
+#chart {
+    margin-top: 20px;
+}
+
+/* Severities */
 #severities {
   margin-top: 5%;
 }
