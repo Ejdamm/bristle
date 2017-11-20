@@ -1,11 +1,11 @@
-<?php 
+<?php
 include 'src/header.php';
 $offset = isset($_GET['offset']) && is_numeric($_GET['offset']) ? $_GET['offset'] : 0;
 $sid = isset($_GET['sid']) && is_numeric($_GET['sid']) ? $_GET['sid'] : NULL;
 $cid = isset($_GET['cid']) && is_numeric($_GET['cid']) ? $_GET['cid'] : NULL;
 $html = "";
 $db = new DB_connect;
-$db->connect();	
+$db->connect();
 
 $html .= "<section id='events'>";
 
