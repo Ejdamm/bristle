@@ -17,8 +17,26 @@ function showSingleEvent($db, $sid, $cid)
 	$singleEvent = $db->getSingleEvent($sid, $cid);
 	$payload = $singleEvent['data_payload'];
 	$html = "";
+	$html .= "<div id='eventInfo'>";
+	$html .= "<div class='eventInfoBlock'><span class='eventInfoField'><span class='fieldLabel'>Protocol: </span><span>";
+	$sport = "<span class='eventInfoField'><span class='fieldLabel'>Source port: </span><span>";
+	$dport = "<span class='eventInfoField'><span class='fieldLabel'>Destination port: </span><span>";
+
+	if ($singleEvent['tcp_dport']) {
+		$html .= "TCP</span></span>";
+		$html .= $sport . $singleEvent['tcp_sport'] . "</span></span>";
+		$html .= $dport . $singleEvent['tcp_dport'] . "</span></span></div>";
+	} else if ($singleEvent['udp_dport']) {
+		$html .= "UDP</span></span>";
+		$html .= $sport . $singleEvent['udp_sport'] . "</span></span>";
+		$html .= $dport . $singleEvent['udp_dport'] . "</span></span></div>";
+	} else {
+		$html .= "ICMP</span></span></div>";
+	}
+
 	$formattedPayload = hex2ascii($payload);
-	$html .= "<div id='eventInfo'><div id='payloadLabel'>Payload:</div><span id='payload'>$formattedPayload</span></div>";
+	$html .= "<div class='eventInfoBlock'><div class='fieldLabel'>Payload:</div><div>$formattedPayload</div></div>";
+	$html .= "</div>";
 	return $html;
 }
 

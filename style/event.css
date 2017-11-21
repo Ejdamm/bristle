@@ -9,13 +9,19 @@
 
 #eventInfo {
 	border-top: 1px solid #ddd;
-	padding: 2% 5% 2% 5%;
+	padding: 2% 5% 0% 5%;
 }
 
-#payload {
+.eventInfoBlock {
+	margin-bottom: 2%;
 }
 
-#payloadLabel {
+.eventInfoField {
+	display: inline-block;
+	margin-right: 5%;
+}
+
+.fieldLabel {
 	font-weight: bold;
 }
 
