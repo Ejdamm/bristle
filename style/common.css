@@ -4,23 +4,22 @@
 @import url("login.css");
 
 body {
-  margin: 0px;
-  color: #3e3e40;
-  font-family: "Oxygen", sans-serif;
+    margin: 0px;
+    color: #3e3e40;
+    font-family: "Oxygen", sans-serif;
 }
 
 main {
-  padding: 50px 0px 0px 0px;
-  margin: 0% 13%;
+    padding: 50px 0px 0px 0px;
+    margin: 0% 13%;
 }
 
 a:link, a:visited {
-  color: #337ab7;
-  text-decoration: none;
+    color: #337ab7;
+    text-decoration: none;
 }
 
 a:hover, a:active {
-  color: #2C5981;
-  text-decoration: none;
+    color: #2C5981;
+    text-decoration: none;
 }
-

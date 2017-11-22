@@ -10,7 +10,7 @@ include 'src/common.php';
   <head>
     <title>bristle</title>
     <link rel="stylesheet" href="style/common.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oxygen"> 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oxygen">
   </head>
   <body>
     <header>

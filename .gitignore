@@ -1,1 +1,7 @@
-*.sql
+*
+!/style/*.css
+!/src/conf.php.example
+!/lib/
+!*.php
+!LICENSE.md
+!README.md
