@@ -11,7 +11,7 @@ The project is in an early state and these features are planned:
 * More info about IP/TCP/UDP/ICMP packets in extended view of events
 * Bunch together duplicate events
 * Filter options for events
-* Make severity count and statistics follow time periods in dashboard
+* Make "most common/frequent" follow time periods in dashboard
 * Connect to snort knowledge database
 * Option to limit access with login
 * Link the source IP to open AbuseIPDB or other security website

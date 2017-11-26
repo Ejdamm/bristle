@@ -74,23 +74,6 @@ class DB_CONNECT
         return $arr;
     }
 
-    public function countSeverities()
-    {
-        $sql = "SELECT COUNT(*) as count, sig_priority FROM event
-                INNER JOIN signature on event.signature = signature.sig_id
-                GROUP BY sig_priority
-                ORDER BY sig_priority";
-        if (!$result = $this->db->query($sql)) {
-            die("Error description: " . $this->db->error);
-        }
-        $arr = array();
-        while ($row = $result->fetch_assoc()) {
-            $arr[] = $row;
-        }
-
-        return $arr;
-    }
-
     public function getEvents($offset, $limit)
     {
         if (!is_numeric($offset)) {

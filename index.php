@@ -58,7 +58,7 @@ default:
 $chartdata = $db->countEventsPerDay($days);
 foreach ($labels as $label) {
     for ($i = 0; $i <= 2; $i++) {
-        $data[$i][] = !empty($chartdata[$label][$i]) ? $chartdata[$label][$i] : 0;
+        $data[$i][] = !empty($chartdata[$label][$i+1]) ? $chartdata[$label][$i+1] : 0;
     }
 }
 
@@ -93,9 +93,10 @@ for ($i = 0; $i < 3; $i++) {
 }
 
 //Update the count from the database result
-$severityCount = $db->countSeverities();
-foreach ($severityCount as $sCount) {
-    $severities[$sCount['sig_priority']]['count'] = $sCount['count'];
+foreach ($chartdata as $day) {
+    foreach ($day as $key => $priority) {
+        $severities[$key]['count'] += $priority;
+    }
 }
 
 //Create the html for severity boxes
