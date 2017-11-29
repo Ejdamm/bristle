@@ -112,20 +112,20 @@ $html .= "</div></section>";
 
 //Get statistics
 $htmlCE = "";
-$commonEvents = $db->getCommonEvents();
+$commonEvents = $db->getCommonEvents($days);
 foreach ($commonEvents as $event) {
     $htmlCE .= "<div class='comp_entry'>".$event['sig_name']." (".$event['amount'].")"."</div>";
 }
 
 $htmlFIP = "";
-$frequentIP = $db->getFrequentIP();
+$frequentIP = $db->getFrequentIP($days);
 foreach ($frequentIP as $ip) {
     $htmlFIP .= "<div class='comp_entry'>".$ip['ip_src']." (".$ip['amount'].")"."</div>";
 }
 
 $html .= "<aside id='compilation'>
-          <div><h4>Most common events (last 30 days)</h4>$htmlCE</div>
-          <div><h4>Most frequent source IP (last 30 days)</h4>$htmlFIP</div>
+          <div><h4>Most common events</h4>$htmlCE</div>
+          <div><h4>Most frequent source IP</h4>$htmlFIP</div>
           </aside>
           <script src='lib/Chart.js'></script>
           <script src='lib/driver.js'></script>

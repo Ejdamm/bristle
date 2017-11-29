@@ -33,10 +33,30 @@ class DB_CONNECT
         }
     }
 
-    public function countEventsPerDay($days)
+    private function firstDay($days)
     {
         $firstDayFormat = "Y-m-d 00:00:00";
         $hours = 24 * 3600;
+        switch ($days) {
+        case 7:
+        case 30:
+            break;
+        case 365:
+            $followingMonth = date("m", time() - 364 * 24 * 3600) % 12 + 1;
+            $firstDayFormat = "Y-$followingMonth-01 00:00:00";
+            break;
+        case 1:
+        default:
+            $days = 2;
+            $hours = 23 * 3600;
+            $firstDayFormat = "Y-m-d H:00:00";
+        }
+        $firstDay = date($firstDayFormat, time() - ($days - 1) * $hours);
+        return $firstDay;
+    }
+
+    public function countEventsPerDay($days)
+    {
         switch ($days) {
         case 7:
             $format = "%W";
@@ -46,17 +66,12 @@ class DB_CONNECT
             break;
         case 365:
             $format = "%M";
-            $followingMonth = date("m", time() - 364 * 24 * 3600) % 12 + 1;
-            $firstDayFormat = "Y-$followingMonth-01 00:00:00";
             break;
         case 1:
         default:
             $format = "%H:00";
-            $days = 2;
-            $hours = 23 * 3600;
-            $firstDayFormat = "Y-m-d H:00:00";
         }
-        $firstDay = date($firstDayFormat, time() - ($days - 1) * $hours);
+        $firstDay = $this->firstDay($days);
         $sql = "SELECT DATE_FORMAT(timestamp, '$format') as date,
                 COUNT(*) as nrOfEvents, sig_priority as priority
                 FROM event
@@ -70,7 +85,6 @@ class DB_CONNECT
         while ($row = $result->fetch_assoc()) {
             $arr[$row['date']][$row['priority']] = $row['nrOfEvents'];
         }
-
         return $arr;
     }
 
@@ -95,7 +109,6 @@ class DB_CONNECT
         while ($row = $result->fetch_assoc()) {
             $arr[] = $row;
         }
-
         return $arr;
     }
 
@@ -141,15 +154,15 @@ class DB_CONNECT
         while ($row = $result->fetch_assoc()) {
             $arr[] = $row;
         }
-
         return $arr;
     }
 
-    public function getCommonEvents()
+    public function getCommonEvents($days)
     {
+        $firstDay = $this->firstDay($days);
         $sql = "SELECT sig_name, COUNT(sig_name) AS amount FROM event
                 INNER JOIN signature on event.signature = signature.sig_id
-                WHERE timestamp BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()
+                WHERE DATE_FORMAT(timestamp, '%Y-%m-%d %H:%i:%s') >= '$firstDay'
                 GROUP BY sig_name
                 ORDER BY amount DESC
                 LIMIT 5";
@@ -160,17 +173,17 @@ class DB_CONNECT
         while ($row = $result->fetch_assoc()) {
             $arr[] = $row;
         }
-
         return $arr;
     }
 
-    public function getFrequentIP()
+    public function getFrequentIP($days)
     {
+        $firstDay = $this->firstDay($days);
         $sql = "SELECT inet_ntoa(ip_src) as ip_src, COUNT(inet_ntoa(ip_src)) as amount
                 FROM event
                 INNER JOIN signature on event.signature = signature.sig_id
                 INNER JOIN iphdr on event.sid = iphdr.sid AND event.cid = iphdr.cid
-                WHERE timestamp BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW()
+                WHERE DATE_FORMAT(timestamp, '%Y-%m-%d %H:%i:%s') >= '$firstDay'
                 GROUP BY ip_src
                 ORDER BY amount DESC
                 LIMIT 5";
@@ -181,7 +194,6 @@ class DB_CONNECT
         while ($row = $result->fetch_assoc()) {
             $arr[] = $row;
         }
-
         return $arr;
     }
 }
