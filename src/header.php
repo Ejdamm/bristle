@@ -2,7 +2,6 @@
 include 'src/conf.php';
 include 'src/db.php';
 include 'src/functions.php';
-include 'src/common.php';
 
 ?>
 <!DOCTYPE html>

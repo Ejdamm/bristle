@@ -1,5 +1,25 @@
 <?php
 
+function dump($arr)
+{
+	echo "<pre>" . print_r($arr, true) . "</pre>";
+}
+
+function createURL(array $gets)
+{
+    $url = "";
+    if (!empty($gets)) {
+        $url = "?";
+        foreach ($gets as $key => $value) {
+            if ($value) {
+                $url .= "$key=$value&";
+            }
+        }
+        $url = rtrim($url, "&");
+    }
+    return $url;
+}
+
 function paging($offset, $totalEvents)
 {
     include 'src/conf.php';

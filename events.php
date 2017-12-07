@@ -3,9 +3,20 @@ include 'src/header.php';
 $offset = isset($_GET['offset']) && is_numeric($_GET['offset']) ? $_GET['offset'] : 0;
 $sid = isset($_GET['sid']) && is_numeric($_GET['sid']) ? $_GET['sid'] : NULL;
 $cid = isset($_GET['cid']) && is_numeric($_GET['cid']) ? $_GET['cid'] : NULL;
+$filter = isset($_GET['filter']) && $_GET['filter'] == "-" ? $_GET['filter'] : "+";
+$inv = $filter == "+" ? "-" : "+";
+$gets = array('offset' => $offset, 'filter' => $inv, 'sid' => $sid, 'cid' => $cid);
+$url = createURL($gets);
 $html = "";
 $db = new DB_connect;
 $db->connect();
+
+$html .= "<section id=filter><a href='$url'>".$filter."Filter</a>";
+$gets['filter'] = $filter;
+if ($filter == "-") {
+    $html .= " show some filter";
+}
+$html .= "</section>";
 
 $html .= "<section id='events'>";
 $events = $db->getEvents($offset, $LIMIT);
@@ -21,13 +32,16 @@ foreach($events as $event) {
                   </span><span class='eventAttr eventName'>Event Signature
                   </span><span class='eventAttr eventTime'>Time</span></div>";
     }
-    $html .= "<a href='?offset=$offset&sid=".$event['sid']."&cid=".$event['cid']."'>
-    <div class='event'>
-    <span class='eventAttr eventPrio".$event['sig_priority']."'>".$event['sig_priority']."
-    </span><span class='eventAttr eventSrc'>".$event['ip_src']."
-    </span><span class='eventAttr eventDest'>".$event['ip_dst']."
-    </span><span class='eventAttr eventName'>".$event['sig_name']."
-    </span><span class='eventAttr eventTime'>".$event['time']."</span></div></a>";
+    $gets['sid'] = $event['sid'];
+    $gets['cid'] = $event['cid'];
+    $url = createURL($gets);
+    $html .= "<a href='$url'>
+              <div class='event'>
+              <span class='eventAttr eventPrio".$event['sig_priority']."'>".$event['sig_priority']."
+              </span><span class='eventAttr eventSrc'>".$event['ip_src']."
+              </span><span class='eventAttr eventDest'>".$event['ip_dst']."
+              </span><span class='eventAttr eventName'>".$event['sig_name']."
+              </span><span class='eventAttr eventTime'>".$event['time']."</span></div></a>";
     if ($sid == $event['sid'] && $cid == $event['cid']) {
         $html .= showSingleEvent($db, $sid, $cid);
     }
