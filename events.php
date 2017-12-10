@@ -14,7 +14,11 @@ $db->connect();
 $html .= "<section id=filter><a href='$url'>".$filter."Filter</a>";
 $gets['filter'] = $filter;
 if ($filter == "-") {
-    $html .= " show some filter";
+    $html .= "<form id='filterForm'>
+              <input type='text' name='sourceip' placeholder='Source IP'>
+              <input type='submit' value='Filter'>
+              <input type='hidden' name='filter' value='$filter'>
+              </form>";
 }
 $html .= "</section>";
 
