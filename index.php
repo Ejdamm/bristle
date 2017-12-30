@@ -2,8 +2,7 @@
 include 'src/header.php';
 
 $html = "";
-$db = new DB_connect;
-$db->connect();
+$db = new DB_query;
 $days = isset($_GET['days']) ? $_GET['days'] : 1;
 $severityLabels = array("High severity", "Medium severity", "Low severity");
 
@@ -77,7 +76,7 @@ $options = array('scales' => array('yAxes' => array(array(
 $attributes = array('id' => 'chart');
 
 //Create chart
-require 'lib/ChartJS.php';
+require 'lib/Chart/ChartJS.php';
 $chart = new ChartJS('line', $labels, $options, $attributes);
 for ($i = 0; $i < 3; $i++) {
     $chart->addDataset($dataset[$i]);
@@ -114,21 +113,21 @@ $html .= "</div></section>";
 $htmlCE = "";
 $commonEvents = $db->getCommonEvents($days);
 foreach ($commonEvents as $event) {
-    $htmlCE .= "<div class='comp_entry'>".$event['sig_name']." (".$event['amount'].")"."</div>";
+    $htmlCE .= "<div class='comp_entry'>".$event->sig_name." (".$event->amount.")"."</div>";
 }
 
 $htmlFIP = "";
 $frequentIP = $db->getFrequentIP($days);
 foreach ($frequentIP as $ip) {
-    $htmlFIP .= "<div class='comp_entry'>".$ip['ip_src']." (".$ip['amount'].")"."</div>";
+    $htmlFIP .= "<div class='comp_entry'>".$ip->ip_src." (".$ip->amount.")"."</div>";
 }
 
 $html .= "<aside id='compilation'>
           <div><h4>Most common events</h4>$htmlCE</div>
           <div><h4>Most frequent source IP</h4>$htmlFIP</div>
           </aside>
-          <script src='lib/Chart.js'></script>
-          <script src='lib/driver.js'></script>
+          <script src='lib/Chart/Chart.js'></script>
+          <script src='lib/Chart/driver.js'></script>
           <script>(function() {loadChartJsPhp();})();</script>";
 
 echo $html;

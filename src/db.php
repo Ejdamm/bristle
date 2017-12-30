@@ -1,36 +1,16 @@
 <?php
+require "lib/Database/TSQLQueryBuilderBasic.php";
+require "lib/Database/CDatabaseBasic.php";
 
-class DB_CONNECT
+class DB_QUERY
 {
     private $db = null;
 
     public function __construct()
     {
-        $this->connect();
-    }
-
-    public function __destruct()
-    {
-        $this->close();
-    }
-
-    public function connect()
-    {
-        include __DIR__ . '/conf.php';
-
-        $this->db = new mysqli($DB_SERVER, $DB_USER, $DB_PASSWORD, $DB_DATABASE);
-        if ($this->db->connect_error) {
-            die("Connection failed: " . $this->db->connect_error);
-        }
-
-        return $this->db;
-    }
-
-    public function close()
-    {
-        if ($this->db != null) {
-            $this->db->close();
-        }
+        require __DIR__ . '/conf.php';
+        $this->db = new \Mos\Database\CDatabaseBasic($DB_OPTIONS);
+        $this->db->connect();
     }
 
     private function firstDay($days)
@@ -72,18 +52,16 @@ class DB_CONNECT
             $format = "%H:00";
         }
         $firstDay = $this->firstDay($days);
-        $sql = "SELECT DATE_FORMAT(timestamp, '$format') as date,
+        $sql = "SELECT DATE_FORMAT(timestamp, ?) as date,
                 COUNT(*) as nrOfEvents, sig_priority as priority
                 FROM event
                 INNER JOIN signature ON event.signature = signature.sig_id
-                WHERE DATE_FORMAT(timestamp, '%Y-%m-%d %H:%i:%s') >= '$firstDay'
+                WHERE DATE_FORMAT(timestamp, '%Y-%m-%d %H:%i:%s') >= ?
                 GROUP BY date, priority";
-        if (!$result = $this->db->query($sql)) {
-            die("Error description: " . $this->db->error);
-        }
+        $res = $this->db->executeFetchAll($sql, array($format, $firstDay));
         $arr = array();
-        while ($row = $result->fetch_assoc()) {
-            $arr[$row['date']][$row['priority']] = $row['nrOfEvents'];
+        foreach($res as $row) {
+            $arr[$row->date][$row->priority] = $row->nrOfEvents;
         }
         return $arr;
     }
@@ -93,10 +71,12 @@ class DB_CONNECT
         if (!is_numeric($offset)) {
             return array();
         }
+        $params = array();
         if (!empty($filter)) {
             $where = "WHERE";
             foreach ($filter as $key => $value) {
-                $where .= " $key = '$value' AND";
+                $where .= " $key = ? AND";
+                $params[] = $value;
             }
             $where = rtrim($where, " AND");
         } else {
@@ -110,61 +90,34 @@ class DB_CONNECT
                 INNER JOIN iphdr on event.sid = iphdr.sid AND event.cid = iphdr.cid
                 $where
                 ORDER BY date DESC, time DESC
-                LIMIT $limit
-                OFFSET $offset";
-        if (!$result = $this->db->query($sql)) {
-            die("Error description: " . $this->db->error);
-        }
-        $arr = array();
-        while ($row = $result->fetch_assoc()) {
-            $arr[] = $row;
-        }
-        return $arr;
+                LIMIT ?
+                OFFSET ?";
+        array_push($params, $limit, $offset);
+        $res = $this->db->executeFetchAll($sql, $params);
+        return $res;
     }
 
     public function getSingleEvent($sid, $cid)
     {
         $sql = "SELECT data_payload, tcp_sport, tcp_dport, udp_sport, udp_dport
                 FROM event
-                INNER JOIN data on event.sid = data.sid AND event.cid = data.cid
+                LEFT JOIN data on event.sid = data.sid AND event.cid = data.cid
                 INNER JOIN signature on event.signature = signature.sig_id
                 INNER JOIN iphdr on event.sid = iphdr.sid AND event.cid = iphdr.cid
                 LEFT JOIN tcphdr on event.sid = tcphdr.sid AND event.cid = tcphdr.cid
                 LEFT JOIN udphdr on event.sid = udphdr.sid AND event.cid = udphdr.cid
                 LEFT JOIN icmphdr on event.sid = icmphdr.sid AND event.cid = icmphdr.cid
-                WHERE event.sid = $sid AND event.cid = $cid";
-        if (!$result = $this->db->query($sql)) {
-            die("Error description: " . $this->db->error);
-        }
-        $arr = array();
-        return $result->fetch_assoc();
+                WHERE event.sid = ? AND event.cid = ?";
+        $res = $this->db->executeFetchAll($sql, array($sid, $cid));
+        return $res[0];
+
     }
 
     public function countEvents()
     {
         $sql = "SELECT COUNT(*) as amount FROM event";
-        if (!$result = $this->db->query($sql)) {
-            die("Error description: " . $this->db->error);
-        }
-        $arr = array();
-        return $result->fetch_assoc();
-    }
-
-    public function getLastEvents()
-    {
-        $sql = "SELECT sig_name, MAX(timestamp) AS timestamp FROM event
-                INNER JOIN signature on event.signature = signature.sig_id
-                GROUP BY sig_name
-                ORDER BY timestamp DESC
-                LIMIT 5";
-        if (!$result = $this->db->query($sql)) {
-            die("Error description: " . $this->db->error);
-        }
-        $arr = array();
-        while ($row = $result->fetch_assoc()) {
-            $arr[] = $row;
-        }
-        return $arr;
+        $res = $this->db->executeFetchAll($sql);
+        return $res[0]->amount;
     }
 
     public function getCommonEvents($days)
@@ -172,18 +125,12 @@ class DB_CONNECT
         $firstDay = $this->firstDay($days);
         $sql = "SELECT sig_name, COUNT(sig_name) AS amount FROM event
                 INNER JOIN signature on event.signature = signature.sig_id
-                WHERE DATE_FORMAT(timestamp, '%Y-%m-%d %H:%i:%s') >= '$firstDay'
+                WHERE DATE_FORMAT(timestamp, '%Y-%m-%d %H:%i:%s') >= ?
                 GROUP BY sig_name
                 ORDER BY amount DESC
                 LIMIT 5";
-        if (!$result = $this->db->query($sql)) {
-            die("Error description: " . $this->db->error);
-        }
-        $arr = array();
-        while ($row = $result->fetch_assoc()) {
-            $arr[] = $row;
-        }
-        return $arr;
+        $res = $this->db->executeFetchAll($sql, array($firstDay));
+        return $res;
     }
 
     public function getFrequentIP($days)
@@ -193,17 +140,11 @@ class DB_CONNECT
                 FROM event
                 INNER JOIN signature on event.signature = signature.sig_id
                 INNER JOIN iphdr on event.sid = iphdr.sid AND event.cid = iphdr.cid
-                WHERE DATE_FORMAT(timestamp, '%Y-%m-%d %H:%i:%s') >= '$firstDay'
+                WHERE DATE_FORMAT(timestamp, '%Y-%m-%d %H:%i:%s') >= ?
                 GROUP BY ip_src
                 ORDER BY amount DESC
                 LIMIT 5";
-        if (!$result = $this->db->query($sql)) {
-            die("Error description: " . $this->db->error);
-        }
-        $arr = array();
-        while ($row = $result->fetch_assoc()) {
-            $arr[] = $row;
-        }
-        return $arr;
+        $res = $this->db->executeFetchAll($sql, array($firstDay));
+        return $res;
     }
 }

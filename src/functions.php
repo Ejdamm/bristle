@@ -38,7 +38,6 @@ function paging($offset, $totalEvents)
 function showSingleEvent($db, $sid, $cid)
 {
     $singleEvent = $db->getSingleEvent($sid, $cid);
-    $payload = $singleEvent['data_payload'];
     $html = "";
     $html .= "<div id='eventInfo'>";
     $html .= "<div class='eventInfoBlock'><span class='eventInfoField'>
@@ -48,19 +47,20 @@ function showSingleEvent($db, $sid, $cid)
     $dport = "<span class='eventInfoField'>
               <span class='fieldLabel'>Destination port: </span><span>";
 
-    if ($singleEvent['tcp_dport']) {
+    if ($singleEvent->tcp_dport) {
         $html .= "TCP</span></span>";
-        $html .= $sport . $singleEvent['tcp_sport'] . "</span></span>";
-        $html .= $dport . $singleEvent['tcp_dport'] . "</span></span></div>";
-    } elseif ($singleEvent['udp_dport']) {
+        $html .= $sport . $singleEvent->tcp_sport . "</span></span>";
+        $html .= $dport . $singleEvent->tcp_dport . "</span></span></div>";
+    } elseif ($singleEvent->udp_dport) {
         $html .= "UDP</span></span>";
-        $html .= $sport . $singleEvent['udp_sport'] . "</span></span>";
-        $html .= $dport . $singleEvent['udp_dport'] . "</span></span></div>";
+        $html .= $sport . $singleEvent->udp_sport . "</span></span>";
+        $html .= $dport . $singleEvent->udp_dport . "</span></span></div>";
     } else {
         $html .= "ICMP</span></span></div>";
     }
 
-    $formattedPayload = hex2ascii($payload);
+    $payload = $singleEvent->data_payload;
+    $formattedPayload = $payload ? hex2ascii($singleEvent->data_payload) : "none";
     $html .= "<div class='eventInfoBlock'><div class='fieldLabel'>Payload:</div>
               <div>$formattedPayload</div></div>";
     $html .= "</div>";
