@@ -88,10 +88,19 @@ class DB_CONNECT
         return $arr;
     }
 
-    public function getEvents($offset, $limit)
+    public function getEvents($offset, $filter, $limit)
     {
         if (!is_numeric($offset)) {
             return array();
+        }
+        if (!empty($filter)) {
+            $where = "WHERE";
+            foreach ($filter as $key => $value) {
+                $where .= " $key = '$value' AND";
+            }
+            $where = rtrim($where, " AND");
+        } else {
+            $where = "";
         }
         $sql = "SELECT event.sid, event.cid, sig_name, DATE_FORMAT(timestamp, '%Y-%m-%d') AS date,
                 DATE_FORMAT(timestamp, '%H:%i') AS time, sig_priority,
@@ -99,6 +108,7 @@ class DB_CONNECT
                 FROM event
                 INNER JOIN signature on event.signature = signature.sig_id
                 INNER JOIN iphdr on event.sid = iphdr.sid AND event.cid = iphdr.cid
+                $where
                 ORDER BY date DESC, time DESC
                 LIMIT $limit
                 OFFSET $offset";

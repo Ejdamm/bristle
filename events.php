@@ -3,27 +3,28 @@ include 'src/header.php';
 $offset = isset($_GET['offset']) && is_numeric($_GET['offset']) ? $_GET['offset'] : 0;
 $sid = isset($_GET['sid']) && is_numeric($_GET['sid']) ? $_GET['sid'] : NULL;
 $cid = isset($_GET['cid']) && is_numeric($_GET['cid']) ? $_GET['cid'] : NULL;
-$filter = isset($_GET['filter']) && $_GET['filter'] == "-" ? $_GET['filter'] : "+";
-$inv = $filter == "+" ? "-" : "+";
+$filterMode = isset($_GET['filter']) && $_GET['filter'] == "-" ? $_GET['filter'] : "+";
+$inv = $filterMode == "+" ? "-" : "+";
+$filter = isset($_GET['sourceip']) && $_GET['sourceip'] ? array('ip_src' => ip2long($_GET['sourceip'])) : array();
 $gets = array('offset' => $offset, 'filter' => $inv, 'sid' => $sid, 'cid' => $cid);
 $url = createURL($gets);
 $html = "";
 $db = new DB_connect;
 $db->connect();
 
-$html .= "<section id=filter><a href='$url'>".$filter."Filter</a>";
-$gets['filter'] = $filter;
-if ($filter == "-") {
-    $html .= "<form id='filterForm'>
+$html .= "<section id=filter><a href='$url'>".$filterMode."Filter</a>";
+$gets['filter'] = $filterMode;
+if ($filterMode == "-") {
+    $html .= "<form method='GET' id='filterForm'>
               <input type='text' name='sourceip' placeholder='Source IP'>
-              <input type='submit' value='Filter'>
-              <input type='hidden' name='filter' value='$filter'>
+              <input type='submit' name='submit' value='Filter'>
+              <input type='hidden' name='filter' value='$filterMode'>
               </form>";
 }
 $html .= "</section>";
 
 $html .= "<section id='events'>";
-$events = $db->getEvents($offset, $LIMIT);
+$events = $db->getEvents($offset, $filter, $LIMIT);
 $runningDate = NULL;
 foreach($events as $event) {
     if ($event['date'] != $runningDate) {
