@@ -1,7 +1,12 @@
 <?php
+
+$DB_OPTIONS = [
+    // Set up details on how to connect to the database
+    'dsn'     => "mysql:host=localhost;dbname=snort;",
+    'username'        => "root",
+    'password'        => "password",
+    'driver_options'  => [PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'"],
+];
+
 $PATH = "/var/www/html/bristle/";
-$DB_SERVER = "localhost";
-$DB_USER = "root";
-$DB_DATABASE = "snort";
-$DB_PASSWORD = "password";
-$LIMIT = 20;
+$LIMIT = 15;
