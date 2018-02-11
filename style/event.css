@@ -16,6 +16,10 @@
     padding: 2% 5% 0% 5%;
 }
 
+.eventTable td, th{
+    border: 1px solid black;
+}
+
 .eventInfoBlock {
     margin-bottom: 2%;
 }

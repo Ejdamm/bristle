@@ -40,31 +40,112 @@ function showSingleEvent($db, $sid, $cid)
     $singleEvent = $db->getSingleEvent($sid, $cid);
     $html = "";
     $html .= "<div id='eventInfo'>";
-    $html .= "<div class='eventInfoBlock'><span class='eventInfoField'>
-              <span class='fieldLabel'>Protocol: </span><span>";
-    $sport = "<span class='eventInfoField'>
-              <span class='fieldLabel'>Source port: </span><span>";
-    $dport = "<span class='eventInfoField'>
-              <span class='fieldLabel'>Destination port: </span><span>";
+	$html .= createIPheader($singleEvent);
 
-    if ($singleEvent->tcp_dport) {
-        $html .= "TCP</span></span>";
-        $html .= $sport . $singleEvent->tcp_sport . "</span></span>";
-        $html .= $dport . $singleEvent->tcp_dport . "</span></span></div>";
-    } elseif ($singleEvent->udp_dport) {
-        $html .= "UDP</span></span>";
-        $html .= $sport . $singleEvent->udp_sport . "</span></span>";
-        $html .= $dport . $singleEvent->udp_dport . "</span></span></div>";
-    } else {
-        $html .= "ICMP</span></span></div>";
-    }
+	switch ($singleEvent->ip_proto) {
+	case 1:
+		$html .= createICMPheader($singleEvent);
+		break;
+	case 6:
+		$html .= createTCPheader($singleEvent);
+		break;
+	case 17:
+		$html .= createUDPheader($singleEvent);
+		break;
+	}
 
-    $payload = $singleEvent->data_payload;
-    $formattedPayload = $payload ? hex2ascii($singleEvent->data_payload) : "none";
-    $html .= "<div class='eventInfoBlock'><div class='fieldLabel'>Payload:</div>
-              <div>$formattedPayload</div></div>";
+	$html .= createSignatureInfo($singleEvent);
+	$html .= createPayloadInfo($singleEvent->data_payload);
     $html .= "</div>";
     return $html;
+}
+
+function createIPheader($singleEvent)
+{
+	$html = "<div class='eventInfoBlock'>
+				<h4>IP Header<h4>
+				<table class='eventTable'>
+					<tr>
+						<th>src</th>
+						<th>dest</th>
+						<th>ver</th>
+						<th>hlen</th>
+						<th>tos</th>
+						<th>len</th>
+						<th>id</th>
+						<th>flags</th>
+						<th>off</th>
+						<th>ttl</th>
+						<th>proto</th>
+						<th>csum</th>
+					</tr>
+					<tr>
+						<td>$singleEvent->ip_src</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</table>
+			</div>";
+	return $html;
+}
+
+function createICMPheader($singleEvent)
+{
+	$html = "<div class='eventInfoBlock'><h4>ICMP Header<h4>
+			</div>";
+	return $html;
+}
+
+function createTCPheader($singleEvent)
+{
+	$html = "<div class='eventInfoBlock'><h4>TCP Header<h4>
+			  <span class='eventInfoField'>
+			  	  <span class='fieldLabel'>Source port: </span>
+			  	  <span>" . $singleEvent->tcp_sport . "</span>
+			  </span>
+			  	  <span class='eventInfoField'>
+			  	  <span class='fieldLabel'>Destination port: </span>
+			  <span>" . $singleEvent->tcp_dport . "</span></span>
+			  </div>";
+	return $html;
+}
+
+function createUDPheader($singleEvent)
+{
+	$html = "<div class='eventInfoBlock'><h4>UDP Header<h4>
+			  <span class='eventInfoField'>
+			  	  <span class='fieldLabel'>Source port: </span>
+			  	  <span>" . $singleEvent->udp_sport . "</span>
+			  </span>
+			  	  <span class='eventInfoField'>
+			  	  <span class='fieldLabel'>Destination port: </span>
+			  <span>" . $singleEvent->udp_dport . "</span></span>
+			  </div>";
+	return $html;
+}
+
+function createSignatureInfo($singleEvent)
+{
+	$html = "<div class='eventInfoBlock'><h4>Signature<h4>
+			</div>";
+	return $html;
+}
+
+function createPayloadInfo($payload)
+{
+	$formattedPayload = $payload ? hex2ascii($payload) : "none";
+	$html = "<div class='eventInfoBlock'><h4>Payload</h4>
+			 <div>$formattedPayload</div></div>";
+	return $html;
 }
 
 function hex2ascii($hex)

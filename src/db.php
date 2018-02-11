@@ -99,8 +99,7 @@ class DB_QUERY
 
     public function getSingleEvent($sid, $cid)
     {
-        $sql = "SELECT data_payload, tcp_sport, tcp_dport, udp_sport, udp_dport
-                FROM event
+        $sql = "SELECT * FROM event
                 LEFT JOIN data on event.sid = data.sid AND event.cid = data.cid
                 INNER JOIN signature on event.signature = signature.sig_id
                 INNER JOIN iphdr on event.sid = iphdr.sid AND event.cid = iphdr.cid
@@ -110,7 +109,6 @@ class DB_QUERY
                 WHERE event.sid = ? AND event.cid = ?";
         $res = $this->db->executeFetchAll($sql, array($sid, $cid));
         return $res[0];
-
     }
 
     public function countEvents()
