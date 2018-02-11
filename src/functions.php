@@ -66,32 +66,32 @@ function createIPheader($singleEvent)
 				<h4>IP Header<h4>
 				<table class='eventTable'>
 					<tr>
-						<th>src</th>
-						<th>dest</th>
-						<th>ver</th>
-						<th>hlen</th>
-						<th>tos</th>
-						<th>len</th>
-						<th>id</th>
-						<th>flags</th>
-						<th>off</th>
-						<th>ttl</th>
-						<th>proto</th>
-						<th>csum</th>
+						<th>Source</th>
+						<th>Destination</th>
+						<th>Version</th>
+						<th>Header Length</th>
+						<th>ToS</th>
+						<th>Total Length</th>
+						<th>Identification</th>
+						<th>Flags</th>
+						<th>Fragment Offset</th>
+						<th>TTL</th>
+						<th>Protocol</th>
+						<th>Header Checksum</th>
 					</tr>
 					<tr>
-						<td>$singleEvent->ip_src</td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
+						<td>" . long2ip($singleEvent->ip_src) . "</td>
+						<td>" . long2ip($singleEvent->ip_dst) . "</td>
+						<td>$singleEvent->ip_ver</td>
+						<td>$singleEvent->ip_hlen</td>
+						<td>$singleEvent->ip_tos</td>
+						<td>$singleEvent->ip_len</td>
+						<td>$singleEvent->ip_id</td>
+						<td>$singleEvent->ip_flags</td>
+						<td>$singleEvent->ip_off</td>
+						<td>$singleEvent->ip_ttl</td>
+						<td>$singleEvent->ip_proto</td>
+						<td>$singleEvent->ip_csum</td>
 					</tr>
 				</table>
 			</div>";
@@ -100,42 +100,105 @@ function createIPheader($singleEvent)
 
 function createICMPheader($singleEvent)
 {
-	$html = "<div class='eventInfoBlock'><h4>ICMP Header<h4>
+	$html = "<div class='eventInfoBlock'>
+				<h4>ICMP Header<h4>
+				<table class='eventTable'>
+					<tr>
+						<th>Type</th>
+						<th>Code</th>
+						<th>Checksum</th>
+						<th>Identifier</th>
+						<th>Sequence Nr</th>
+					</tr>
+					<tr>
+						<td>$singleEvent->icmp_type</td>
+						<td>$singleEvent->icmp_code</td>
+						<td>$singleEvent->icmp_csum</td>
+						<td>$singleEvent->icmp_id</td>
+						<td>$singleEvent->icmp_seq</td>
+					</tr>
+				</table>
 			</div>";
 	return $html;
 }
 
 function createTCPheader($singleEvent)
 {
-	$html = "<div class='eventInfoBlock'><h4>TCP Header<h4>
-			  <span class='eventInfoField'>
-			  	  <span class='fieldLabel'>Source port: </span>
-			  	  <span>" . $singleEvent->tcp_sport . "</span>
-			  </span>
-			  	  <span class='eventInfoField'>
-			  	  <span class='fieldLabel'>Destination port: </span>
-			  <span>" . $singleEvent->tcp_dport . "</span></span>
-			  </div>";
+	$html = "<div class='eventInfoBlock'>
+				<h4>TCP Header<h4>
+				<table class='eventTable'>
+					<tr>
+						<th>Source Port</th>
+						<th>Destination Port</th>
+						<th>Sequence Nr</th>
+						<th>Acknowledgment Nr</th>
+						<th>Data Offset</th>
+						<th>Reserved</th>
+						<th>Flags</th>
+						<th>Window Size</th>
+						<th>Checksum</th>
+						<th>Urgent Pointer</th>
+					</tr>
+					<tr>
+						<td>$singleEvent->tcp_sport</td>
+						<td>$singleEvent->tcp_dport</td>
+						<td>$singleEvent->tcp_seq</td>
+						<td>$singleEvent->tcp_ack</td>
+						<td>$singleEvent->tcp_off</td>
+						<td>$singleEvent->tcp_res</td>
+						<td>$singleEvent->tcp_flags</td>
+						<td>$singleEvent->tcp_win</td>
+						<td>$singleEvent->tcp_csum</td>
+						<td>$singleEvent->tcp_urp</td>
+					</tr>
+				</table>
+			</div>";
 	return $html;
 }
 
 function createUDPheader($singleEvent)
 {
-	$html = "<div class='eventInfoBlock'><h4>UDP Header<h4>
-			  <span class='eventInfoField'>
-			  	  <span class='fieldLabel'>Source port: </span>
-			  	  <span>" . $singleEvent->udp_sport . "</span>
-			  </span>
-			  	  <span class='eventInfoField'>
-			  	  <span class='fieldLabel'>Destination port: </span>
-			  <span>" . $singleEvent->udp_dport . "</span></span>
+	$html = "<div class='eventInfoBlock'>
+				<h4>UDP Header<h4>
+				<table class='eventTable'>
+					<tr>
+						<th>Source Port</th>
+						<th>Destination Port</th>
+						<th>Length</th>
+						<th>Cheksum</th>
+					</tr>
+					<tr>
+						<td>$singleEvent->udp_sport</td>
+						<td>$singleEvent->udp_dport</td>
+						<td>$singleEvent->udp_len</td>
+						<td>$singleEvent->udp_csum</td>
+					</tr>
+				</table>
 			  </div>";
 	return $html;
 }
 
 function createSignatureInfo($singleEvent)
 {
-	$html = "<div class='eventInfoBlock'><h4>Signature<h4>
+	$class_name = $singleEvent->sig_class_name ? $singleEvent->sig_class_name : "none";
+	$html = "<div class='eventInfoBlock'>
+				<h4>Signature<h4>
+				<table class='eventTable'>
+					<tr>
+						<th>Generator Id</th>
+						<th>Signature Id</th>
+						<th>Revision</th>
+						<th>Priority</th>
+						<th>Class</th>
+					</tr>
+					<tr>
+						<td>$singleEvent->sig_gid</td>
+						<td>$singleEvent->sig_sid</td>
+						<td>$singleEvent->sig_rev</td>
+						<td>$singleEvent->sig_priority</td>
+						<td>$class_name</td>
+					</tr>
+				</table>
 			</div>";
 	return $html;
 }

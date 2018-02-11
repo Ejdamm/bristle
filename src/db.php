@@ -106,6 +106,7 @@ class DB_QUERY
                 LEFT JOIN tcphdr on event.sid = tcphdr.sid AND event.cid = tcphdr.cid
                 LEFT JOIN udphdr on event.sid = udphdr.sid AND event.cid = udphdr.cid
                 LEFT JOIN icmphdr on event.sid = icmphdr.sid AND event.cid = icmphdr.cid
+                LEFT JOIN sig_class on signature.sig_class_id = sig_class.sig_class_id
                 WHERE event.sid = ? AND event.cid = ?";
         $res = $this->db->executeFetchAll($sql, array($sid, $cid));
         return $res[0];
