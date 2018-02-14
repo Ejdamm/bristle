@@ -11,7 +11,6 @@ The project is in an early state and these features are planned:
 * Bunch together duplicate events
 * More filter options for events
 * Option to limit access with login
-* Link the source IP to open AbuseIPDB or other security website
 * Some minor styling issues
 * Decrease the need of reloading the hole page
 

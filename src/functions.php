@@ -63,9 +63,13 @@ function showSingleEvent($db, $sid, $cid)
 function createIPheader($singleEvent)
 {
 	$html = "<div class='eventInfoBlock'><h4>IP Header</h4>";
+	$src = long2ip($singleEvent->ip_src);
+	$dst = long2ip($singleEvent->ip_dst);
+	$srcAbuse = "<a href='https://www.abuseipdb.com/check/$src'>$src</a>";
+	$destAbuse = "<a href='https://www.abuseipdb.com/check/$dst'>$dst</a>";
 	$columns = array(
-		array('header' => 'Source', 'value' => long2ip($singleEvent->ip_src)),
-		array('header' => 'Destination', 'value' => long2ip($singleEvent->ip_dst)),
+		array('header' => 'Source', 'value' => $srcAbuse),
+		array('header' => 'Destination', 'value' => $destAbuse),
 		array('header' => 'Version', 'value' => $singleEvent->ip_ver),
 		array('header' => 'Header Length', 'value' => $singleEvent->ip_hlen),
 		array('header' => 'ToS', 'value' => $singleEvent->ip_tos),
