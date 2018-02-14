@@ -8,12 +8,13 @@ A simple web gui for [snort](https://www.snort.org/). Snort is an Intrusion Dete
 
 ## TODO list
 The project is in an early state and these features are planned:
-* More info about IP/TCP/UDP/ICMP packets in extended view of events
 * Bunch together duplicate events
 * More filter options for events
 * Connect to snort knowledge database
 * Option to limit access with login
 * Link the source IP to open AbuseIPDB or other security website
+* Some minor styling issues
+* Decrease the need of reloading the hole page
 
 ## Getting started
 Prerequisities: [snort](https://www.snort.org/), [barnyard2](https://github.com/firnsy/barnyard2), php, mysql, any webserver
