@@ -13,24 +13,34 @@
 
 #eventInfo {
     border-top: 1px solid #ddd;
-    padding: 2% 5% 0% 5%;
-}
-
-.eventTable td, th{
-    border: 1px solid black;
+    padding: 0% 2%;
 }
 
 .eventInfoBlock {
     margin-bottom: 2%;
 }
 
-.eventInfoField {
-    display: inline-block;
-    margin-right: 5%;
+.eventInfoBlock h4 {
+    margin-bottom: 5px;
 }
 
-.fieldLabel {
-    font-weight: bold;
+.eventInfoTableCell {
+    display: inline-block;
+    margin: 1px;
+}
+
+.eventInfoTableHeader, .eventInfoTableValue {
+    padding: 3px 10px;
+}
+
+.eventInfoTableHeader {
+    text-align: center;
+    background-color: #c3d9ff;
+}
+
+.eventInfoTableValue {
+    text-align: right;
+    background-color: #f9f7ed;
 }
 
 .payloadTable {
