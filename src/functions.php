@@ -131,12 +131,16 @@ function createSignatureInfo($singleEvent)
 {
 	$html = "<div class='eventInfoBlock'><h4>Signature</h4>";
 	$class_name = $singleEvent->sig_class_name ? $singleEvent->sig_class_name : "none";
+	$rule = "<a href='https://www.snort.org/rule_docs/
+			$singleEvent->sig_gid-$singleEvent->sig_sid'>
+			$singleEvent->sig_gid-$singleEvent->sig_sid</a>";
 	$columns = array(
 		array('header' => 'Generator Id', 'value' => $singleEvent->sig_gid),
 		array('header' => 'Signature Id', 'value' => $singleEvent->sig_sid),
 		array('header' => 'Revision', 'value' => $singleEvent->sig_rev),
 		array('header' => 'Priority', 'value' => $singleEvent->sig_priority),
-		array('header' => 'Class', 'value' => $class_name)
+		array('header' => 'Class', 'value' => $class_name),
+		array('header' => 'Snort Rule Docs', 'value' => $rule)
 	);
 	$html .= tableCreator($columns) . "</div>";
 	return $html;
