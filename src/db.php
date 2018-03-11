@@ -75,7 +75,7 @@ class DB_QUERY
         if (!empty($filter)) {
             $where = "WHERE";
             foreach ($filter as $key => $value) {
-                $where .= " $key = ? AND";
+                $where .= " $key LIKE ? AND";
                 $params[] = $value;
             }
             $where = rtrim($where, " AND");

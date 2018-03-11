@@ -204,3 +204,21 @@ function hex2ascii($hex)
     $html .= "<table class='payloadTable'>$hexrows</table><table class='payloadTable'>$asciirows</table>";
     return $html;
 }
+
+function filterHandler()
+{
+	$filter = [];
+	if (isset($_GET['ip_src']) && $_GET['ip_src']) {
+		$filter['ip_src'] = ip2long($_GET['ip_src']);
+	}
+	if (isset($_GET['ip_dst']) && $_GET['ip_dst']) {
+		$filter['ip_dst'] = ip2long($_GET['ip_dst']);
+	}
+	if (isset($_GET['sig_name']) && $_GET['sig_name']) {
+		$filter['sig_name'] = '%' . $_GET['sig_name'] . '%';
+	}
+
+
+
+	return $filter;
+}

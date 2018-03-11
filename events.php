@@ -5,7 +5,7 @@ $sid = isset($_GET['sid']) && is_numeric($_GET['sid']) ? $_GET['sid'] : NULL;
 $cid = isset($_GET['cid']) && is_numeric($_GET['cid']) ? $_GET['cid'] : NULL;
 $filterMode = isset($_GET['filter']) && $_GET['filter'] == "-" ? $_GET['filter'] : "+";
 $inv = $filterMode == "+" ? "-" : "+";
-$filter = isset($_GET['sourceip']) && $_GET['sourceip'] ? array('ip_src' => ip2long($_GET['sourceip'])) : array();
+$filter = filterHandler();
 $gets = array('offset' => $offset, 'filter' => $inv, 'sid' => $sid, 'cid' => $cid);
 $url = createURL($gets);
 $html = "";
@@ -15,7 +15,9 @@ $html .= "<section id=filter><a href='$url'>".$filterMode."Filter</a>";
 $gets['filter'] = $filterMode;
 if ($filterMode == "-") {
     $html .= "<form method='GET' id='filterForm'>
-              <input type='text' name='sourceip' placeholder='Source IP'>
+              <input type='text' name='ip_src' placeholder='Source IP'>
+              <input type='text' name='ip_dst' placeholder='Destination IP'>
+              <input type='text' name='sig_name' placeholder='Event signature'>
               <input type='submit' name='submit' value='Filter'>
               <input type='hidden' name='filter' value='$filterMode'>
               </form>";
