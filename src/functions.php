@@ -5,16 +5,23 @@ function dump($arr)
 	echo "<pre>" . print_r($arr, true) . "</pre>";
 }
 
-function createURL(array $gets)
+function createURL(array $gets = [])
 {
     $url = "";
-    if (!empty($gets)) {
+    if (!empty($_GET) || !empty($gets)) {
         $url = "?";
-        foreach ($gets as $key => $value) {
-            if ($value) {
-                $url .= "$key=$value&";
-            }
+        foreach ($_GET as $key => $value) {
+            if (isset($gets[$key])) {
+                $url .= "$key=" . $gets[$key] . "&";
+            } else {
+				$url .= "$key=$value&";
+			}
         }
+		foreach ($gets as $key => $value) {
+			if (!isset($_GET[$key])) {
+				$url .= "$key=$value&";
+			}
+		}
         $url = rtrim($url, "&");
     }
     return $url;
@@ -27,12 +34,15 @@ function paging($offset, $totalEvents)
     $next = $offset + $LIMIT;
     $prev = $offset - $LIMIT;
     if ($prev >= 0) {
-        $html .= "<a href='?offset=$prev' id='prev'>Previous</a>";
+		$url = createURL(['offset' => $prev, 'sid' => "", 'cid' => ""]);
+        $html .= "<a href='$url' id='prev'>Previous</a>";
     }
     if ($next <= $totalEvents) {
-        $html .= "<a href='?offset=$next' id='next'>Next</a>";
+		$url = createURL(['offset' => $next, 'sid' => "", 'cid' => ""]);
+        $html .= "<a href='$url' id='next'>Next</a>";
     }
 	$html .= "</div>";
+	$test = ['offset' => $prev, 'sid' => null, 'cid' => null];
     return $html;
 }
 
