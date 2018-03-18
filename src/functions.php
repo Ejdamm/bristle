@@ -23,15 +23,16 @@ function createURL(array $gets)
 function paging($offset, $totalEvents)
 {
     include 'src/conf.php';
-    $html = "";
+    $html = "<div id='paging'>";
     $next = $offset + $LIMIT;
     $prev = $offset - $LIMIT;
     if ($prev >= 0) {
-        $html .= "<div id='paging'><a href='?offset=$prev' id='prev'>Previous</a>";
+        $html .= "<a href='?offset=$prev' id='prev'>Previous</a>";
     }
     if ($next <= $totalEvents) {
-        $html .= "<a href='?offset=$next' id='next'>Next</a></div>";
+        $html .= "<a href='?offset=$next' id='next'>Next</a>";
     }
+	$html .= "</div>";
     return $html;
 }
 
@@ -217,8 +218,6 @@ function filterHandler()
 	if (isset($_GET['sig_name']) && $_GET['sig_name']) {
 		$filter['sig_name'] = '%' . $_GET['sig_name'] . '%';
 	}
-
-
 
 	return $filter;
 }
